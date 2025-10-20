@@ -1,3 +1,472 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)https://haichuc2010.netlify.app/ -->
+<html lang="vi"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Hộp Quà 20/10</title>
+        <style>
+                * {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+                }
+
+                body {
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                        background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+                        min-height: 100vh;
+                        display: flex;
+                        justify-content: center;
+                        align-items: flex-end;
+                        overflow: hidden;
+                        position: relative;
+                        padding-bottom: 50px;
+                }
+
+                .stars {
+                        position: absolute;
+                        width: 100%;
+                        height: 100%;
+                        overflow: hidden;
+                }
+
+                .star {
+                        position: absolute;
+                        width: 2px;
+                        height: 2px;
+                        background: white;
+                        border-radius: 50%;
+                        animation: twinkle 3s infinite;
+                }
+
+                @keyframes twinkle {
+                        0%, 100% { opacity: 0.3; }
+                        50% { opacity: 1; }
+                }
+
+                .container {
+                        text-align: center;
+                        z-index: 10;
+                }
+
+                h1 {
+                        color: #fff;
+                        font-size: 2.5em;
+                        margin-bottom: 30px;
+                        text-shadow: 0 0 20px rgba(255, 192, 203, 0.5);
+                }
+
+                .gift-box {
+                        width: 120px;
+                        height: 120px;
+                        margin: 30px auto;
+                        position: relative;
+                        cursor: pointer;
+                        transition: transform 0.3s ease;
+                }
+
+                .gift-box:hover {
+                        transform: scale(1.1);
+                }
+
+                .box-body {
+                        width: 120px;
+                        height: 90px;
+                        background: linear-gradient(145deg, #ff6b9d, #c44569);
+                        border-radius: 8px;
+                        position: absolute;
+                        bottom: 0;
+                        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                }
+
+                .box-lid {
+                        width: 130px;
+                        height: 40px;
+                        background: linear-gradient(145deg, #ffa07a, #ff6347);
+                        border-radius: 8px 8px 4px 4px;
+                        position: absolute;
+                        top: 0;
+                        left: -5px;
+                        transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                        transform-origin: bottom;
+                        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                }
+
+                .box-lid::before {
+                        content: '';
+                        position: absolute;
+                        width: 20px;
+                        height: 40px;
+                        background: #ff1744;
+                        top: 0;
+                        left: 50%;
+                        transform: translateX(-50%);
+                }
+
+                .box-lid::after {
+                        content: '';
+                        position: absolute;
+                        width: 130px;
+                        height: 20px;
+                        background: #ff1744;
+                        top: 10px;
+                        left: 0;
+                }
+
+                .gift-box.opened .box-lid {
+                        transform: translateY(-100px) rotateX(-90deg);
+                        opacity: 0;
+                }
+
+                .ribbon {
+                        width: 20px;
+                        height: 90px;
+                        background: #ff1744;
+                        position: absolute;
+                        bottom: 0;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        z-index: 1;
+                }
+
+                .ribbon-h {
+                        width: 120px;
+                        height: 20px;
+                        background: #ff1744;
+                        position: absolute;
+                        bottom: 35px;
+                        left: 0;
+                }
+
+                .letters-container {
+                        position: fixed;
+                        width: 100%;
+                        height: 100%;
+                        pointer-events: none;
+                        top: 0;
+                        left: 0;
+                }
+
+                .letter {
+                        position: absolute;
+                        width: 60px;
+                        height: 80px;
+                        background: linear-gradient(145deg, #fff, #f0f0f0);
+                        border-radius: 5px;
+                        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                        cursor: pointer;
+                        pointer-events: all;
+                        transition: transform 0.3s ease, box-shadow 0.3s ease;
+                }
+
+                .letter:hover {
+                        transform: scale(1.2);
+                        box-shadow: 0 10px 30px rgba(255,192,203,0.5);
+                }
+
+                .letter::before {
+                        content: '💌';
+                        position: absolute;
+                        font-size: 2em;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                }
+
+                @keyframes fallLetter {
+                        0% {
+                                top: -100px;
+                                opacity: 0;
+                                transform: translateX(var(--start-x)) rotate(0deg);
+                        }
+                        10% {
+                                opacity: 1;
+                        }
+                        100% {
+                                top: 110vh;
+                                opacity: 0;
+                                transform: translateX(var(--start-x)) rotate(360deg);
+                        }
+                }
+
+                .modal {
+                        display: none;
+                        position: fixed;
+                        z-index: 1000;
+                        left: 0;
+                        top: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: rgba(0,0,0,0.85);
+                        backdrop-filter: blur(10px);
+                }
+
+                .modal-content {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%) scale(0);
+                        background: linear-gradient(145deg, #fff, #ffe6f0);
+                        padding: 40px;
+                        border-radius: 20px;
+                        max-width: 500px;
+                        width: 90%;
+                        box-shadow: 0 20px 60px rgba(255,192,203,0.4);
+                        animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+                }
+
+                @keyframes popIn {
+                        to {
+                                transform: translate(-50%, -50%) scale(1);
+                        }
+                }
+
+                .modal-content h2 {
+                        color: #c44569;
+                        font-size: 2em;
+                        margin-bottom: 20px;
+                        text-align: center;
+                }
+
+                .modal-content p {
+                        color: #333;
+                        font-size: 1.2em;
+                        line-height: 1.8;
+                        margin-bottom: 30px;
+                        text-align: center;
+                }
+
+                .close-btn {
+                        display: block;
+                        margin: 0 auto;
+                        background: linear-gradient(145deg, #ff6b9d, #c44569);
+                        color: white;
+                        border: none;
+                        padding: 15px 40px;
+                        border-radius: 50px;
+                        font-size: 1.1em;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 5px 15px rgba(196,69,105,0.3);
+                }
+
+                .close-btn:hover {
+                        transform: translateY(-3px);
+                        box-shadow: 0 8px 20px rgba(196,69,105,0.5);
+                }
+
+                .instruction {
+                        color: rgba(255,255,255,0.9);
+                        font-size: 1.1em;
+                        margin-top: 30px;
+                        animation: pulse 2s ease infinite;
+                }
+
+                @keyframes pulse {
+                        0%, 100% { opacity: 0.6; }
+                        50% { opacity: 1; }
+                }
+        </style>
+<style>.--savior-overlay-transform-reset {
+    transform: none !important;
+}
+.--savior-overlay-z-index-top {
+    z-index: 2147483643 !important;
+}
+.--savior-overlay-position-relative {
+    position: relative;
+}
+.--savior-overlay-position-static {
+    position: static !important;
+}
+.--savior-overlay-overflow-hidden {
+    overflow: hidden !important;
+}
+.--savior-overlay-overflow-x-visible {
+    overflow-x: visible !important;
+}
+.--savior-overlay-overflow-y-visible {
+    overflow-y: visible !important;
+}
+.--savior-overlay-z-index-reset {
+    z-index: auto !important;
+}
+.--savior-overlay-display-none {
+    display: none !important;
+}
+.--savior-overlay-clearfix {
+    clear: both;
+}
+.--savior-overlay-reset-filter {
+    filter: none !important;
+    backdrop-filter: none !important;
+}
+.--savior-tooltip-host {
+    z-index: 9999;
+    position: absolute;
+    top: 0;
+}
+/*Override css styles for Twitch.tv*/
+main.--savior-overlay-z-index-reset {
+    z-index: auto !important;
+}
+.modal__backdrop.--savior-overlay-z-index-reset {
+    position: static !important;
+}
+main.--savior-overlay-z-index-top {
+    z-index: auto !important;
+}
+main.--savior-overlay-z-index-top .channel-root__player-container + div,
+main.--savior-overlay-z-index-top .video-player-hosting-ui__container + div {
+    opacity: 0.1;
+}
+/*Dirty hack for facebook big video page e.g: https://www.facebook.com/abc/videos/...*/
+.--savior-backdrop {
+    position: fixed !important;
+    z-index: 2147483642 !important;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw !important;
+    background-color: rgba(0,0,0,0.9);
+}
+.--savior-overlay-twitter-video-player {
+    position: fixed;
+    width: 80%;
+    height: 80%;
+    top: 10%;
+    left: 10%;
+}
+.--savior-overlay-z-index-reset [class*="DivSideNavContainer"],
+.--savior-overlay-z-index-reset [class*="DivHeaderContainer"],
+.--savior-overlay-z-index-reset [class*="DivBottomContainer"],
+.--savior-overlay-z-index-reset [class*="DivCategoryListWrapper"],
+.--savior-overlay-z-index-reset [data-testid="sidebarColumn"],
+.--savior-overlay-z-index-reset header[role="banner"],
+.--savior-overlay-z-index-reset [data-testid="cellInnerDiv"]:not(.--savior-overlay-z-index-reset),
+.--savior-overlay-z-index-reset [aria-label="Home timeline"]>div:first-child,
+.--savior-overlay-z-index-reset [aria-label="Home timeline"]>div:nth-child(3) {
+    z-index: -1 !important;
+}
+.--savior-overlay-z-index-reset [data-testid="cellInnerDiv"] .--savior-backdrop+div {
+    z-index: 2147483643 !important;
+}
+.--savior-overlay-z-index-reset [data-testid="primaryColumn"]>[aria-label="Home timeline"] {
+    z-index: 0 !important;
+}
+.--savior-overlay-z-index-reset#mtLayer,
+.--savior-overlay-z-index-reset.media-layer {
+    z-index: 3000 !important;
+}
+.--savior-overlay-position-relative [class*="SecBar_secBar_"],
+.--savior-overlay-position-relative .woo-box-flex [class*="Frame_top_"] {
+    z-index: 0 !important;
+}
+.--savior-overlay-position-relative .vue-recycle-scroller__item-view:not(.--savior-overlay-z-index-reset),
+.--savior-overlay-position-relative .woo-panel-main[class*="BackTop_main_"],
+.--savior-overlay-position-relative [class*="Main_side_"] {
+    z-index: -1 !important;
+}
+/* Fix conflict css with zingmp3 */
+.zm-video-modal.--savior-overlay-z-index-reset {
+    position: absolute;
+}
+/* Dirty hack for xvideos99 */
+#page #main.--savior-overlay-z-index-reset {
+    z-index: auto !important;
+}
+/* Overlay for ok.ru */
+#vp_w.--savior-overlay-z-index-reset.media-layer.media-layer__video {
+    overflow-y: hidden;
+    z-index: 2147483643 !important;
+}
+/* Fix missing controller for tv.naver.com */
+.--savior-overlay-z-index-top.rmc_controller,
+.--savior-overlay-z-index-top.rmc_setting_intro,
+.--savior-overlay-z-index-top.rmc_highlight,
+.--savior-overlay-z-index-top.rmc_control_settings {
+    z-index: 2147483644 !important;
+}
+/* Dirty hack for douyi.com */
+.swiper-wrapper.--savior-overlay-z-index-reset .swiper-slide:not(.swiper-slide-active),
+.swiper-wrapper.--savior-overlay-transform-reset .swiper-slide:not(.swiper-slide-active) {
+    display: none;
+}
+.videoWrap + div > div {
+    pointer-events: unset;
+}
+/* Dirty hack for fpt.ai */
+.mfp-wrap.--savior-overlay-z-index-top {
+    position: relative;
+}
+.mfp-wrap.--savior-overlay-z-index-top .mfp-close {
+    display: none;
+}
+.mfp-wrap.--savior-overlay-z-index-top .mfp-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+section.--savior-overlay-z-index-reset>main[role="main"].--savior-overlay-z-index-reset + nav {
+    z-index: -1 !important;
+}
+section.--savior-overlay-z-index-reset>main[role="main"].--savior-overlay-z-index-reset section.--savior-overlay-z-index-reset div.--savior-overlay-z-index-reset ~ div {
+    position: relative;
+}
+.watching-movie #video-player.--savior-overlay-z-index-top {
+    z-index: 2147483644 !important;
+}
+div[class^="tiktok"].--savior-overlay-z-index-reset {
+    z-index: 2147483644 !important;
+}
+.--savior-lightoff-fix section:not(:has([class*="--savior-overlay-"])),
+.--savior-lightoff-fix section.section_video ~ section {
+    z-index: -1;
+    position: relative;
+}
+.--savior-lightoff-fix header,
+.--savior-lightoff-fix footer,
+.--savior-lightoff-fix .top-header,
+.--savior-lightoff-fix .swiper-container,
+.--savior-lightoff-fix #to_top,
+.--savior-lightoff-fix #button-adblock {
+    z-index: -1 !important;
+}
+@-moz-keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@-webkit-keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@-o-keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+</style></head>
+
 <body>
     <div class="stars" id="stars"><div class="star" style="left: 34.7078%; top: 92.1612%; animation-delay: 0.621756s;"></div><div class="star" style="left: 73.4804%; top: 97.8427%; animation-delay: 1.38196s;"></div><div class="star" style="left: 40.3989%; top: 6.59688%; animation-delay: 1.88569s;"></div><div class="star" style="left: 88.1369%; top: 19.0665%; animation-delay: 1.53434s;"></div><div class="star" style="left: 70.2992%; top: 23.3136%; animation-delay: 2.92292s;"></div><div class="star" style="left: 22.4956%; top: 7.47528%; animation-delay: 2.70949s;"></div><div class="star" style="left: 11.3428%; top: 76.2923%; animation-delay: 1.27469s;"></div><div class="star" style="left: 96.3176%; top: 72.7569%; animation-delay: 1.59479s;"></div><div class="star" style="left: 8.29604%; top: 28.2047%; animation-delay: 0.245141s;"></div><div class="star" style="left: 21.8811%; top: 81.2393%; animation-delay: 2.79991s;"></div><div class="star" style="left: 23.6099%; top: 79.5385%; animation-delay: 0.283217s;"></div><div class="star" style="left: 86.8406%; top: 19.7994%; animation-delay: 0.149502s;"></div><div class="star" style="left: 15.4205%; top: 61.539%; animation-delay: 0.0326088s;"></div><div class="star" style="left: 49.2114%; top: 14.2981%; animation-delay: 0.736034s;"></div><div class="star" style="left: 78.0879%; top: 6.4465%; animation-delay: 2.31428s;"></div><div class="star" style="left: 22.3909%; top: 73.766%; animation-delay: 0.641009s;"></div><div class="star" style="left: 92.3867%; top: 62.4246%; animation-delay: 1.59622s;"></div><div class="star" style="left: 46.3711%; top: 32.6783%; animation-delay: 1.89518s;"></div><div class="star" style="left: 62.8654%; top: 35.1885%; animation-delay: 0.280348s;"></div><div class="star" style="left: 47.5287%; top: 11.1072%; animation-delay: 2.60776s;"></div><div class="star" style="left: 65.8177%; top: 41.2043%; animation-delay: 1.623s;"></div><div class="star" style="left: 15.2715%; top: 50.4178%; animation-delay: 0.667393s;"></div><div class="star" style="left: 6.04903%; top: 30.1917%; animation-delay: 2.35582s;"></div><div class="star" style="left: 55.2936%; top: 86.3566%; animation-delay: 1.32059s;"></div><div class="star" style="left: 9.62428%; top: 49.7952%; animation-delay: 2.93602s;"></div><div class="star" style="left: 61.6866%; top: 17.9739%; animation-delay: 2.46111s;"></div><div class="star" style="left: 56.8235%; top: 8.55946%; animation-delay: 1.66945s;"></div><div class="star" style="left: 35.0113%; top: 55.4964%; animation-delay: 2.19383s;"></div><div class="star" style="left: 81.1164%; top: 45.2613%; animation-delay: 0.814782s;"></div><div class="star" style="left: 1.6819%; top: 95.4017%; animation-delay: 2.26894s;"></div><div class="star" style="left: 40.7967%; top: 99.3676%; animation-delay: 1.05s;"></div><div class="star" style="left: 41.1268%; top: 86.9275%; animation-delay: 2.95409s;"></div><div class="star" style="left: 24.9076%; top: 85.0169%; animation-delay: 2.66205s;"></div><div class="star" style="left: 93.6322%; top: 57.1793%; animation-delay: 0.354327s;"></div><div class="star" style="left: 7.92076%; top: 59.3021%; animation-delay: 0.606093s;"></div><div class="star" style="left: 64.5963%; top: 91.1363%; animation-delay: 2.11745s;"></div><div class="star" style="left: 37.7676%; top: 98.7556%; animation-delay: 2.4122s;"></div><div class="star" style="left: 22.8778%; top: 15.7605%; animation-delay: 2.4137s;"></div><div class="star" style="left: 5.76911%; top: 79.2397%; animation-delay: 1.56114s;"></div><div class="star" style="left: 76.4092%; top: 57.4625%; animation-delay: 0.347342s;"></div><div class="star" style="left: 77.2203%; top: 99.7451%; animation-delay: 2.258s;"></div><div class="star" style="left: 70.4922%; top: 82.0778%; animation-delay: 2.78256s;"></div><div class="star" style="left: 11.8754%; top: 19.74%; animation-delay: 1.07653s;"></div><div class="star" style="left: 24.0891%; top: 23.8478%; animation-delay: 0.545473s;"></div><div class="star" style="left: 62.6317%; top: 51.6351%; animation-delay: 0.950472s;"></div><div class="star" style="left: 82.5402%; top: 71.2431%; animation-delay: 0.358089s;"></div><div class="star" style="left: 93.5878%; top: 27.3435%; animation-delay: 2.87258s;"></div><div class="star" style="left: 3.35209%; top: 80.3902%; animation-delay: 2.38426s;"></div><div class="star" style="left: 73.4323%; top: 23.9097%; animation-delay: 2.53595s;"></div><div class="star" style="left: 36.0858%; top: 10.6089%; animation-delay: 0.948734s;"></div><div class="star" style="left: 32.6434%; top: 95.8871%; animation-delay: 2.12492s;"></div><div class="star" style="left: 72.5099%; top: 20.2095%; animation-delay: 0.680493s;"></div><div class="star" style="left: 67.1539%; top: 64.6672%; animation-delay: 0.0490054s;"></div><div class="star" style="left: 55.4473%; top: 61.5337%; animation-delay: 0.937565s;"></div><div class="star" style="left: 90.9671%; top: 38.3698%; animation-delay: 1.64126s;"></div><div class="star" style="left: 56.2028%; top: 69.7353%; animation-delay: 0.678991s;"></div><div class="star" style="left: 0.318987%; top: 52.8635%; animation-delay: 0.313663s;"></div><div class="star" style="left: 98.9905%; top: 60.2618%; animation-delay: 0.708879s;"></div><div class="star" style="left: 3.85519%; top: 94.8886%; animation-delay: 2.8374s;"></div><div class="star" style="left: 42.9899%; top: 82.7366%; animation-delay: 1.32726s;"></div><div class="star" style="left: 80.4084%; top: 8.73271%; animation-delay: 1.41741s;"></div><div class="star" style="left: 37.9611%; top: 76.0526%; animation-delay: 1.61608s;"></div><div class="star" style="left: 59.7054%; top: 0.420249%; animation-delay: 1.545s;"></div><div class="star" style="left: 76.8271%; top: 18.641%; animation-delay: 1.04537s;"></div><div class="star" style="left: 58.2928%; top: 89.8821%; animation-delay: 2.81507s;"></div><div class="star" style="left: 99.4394%; top: 55.726%; animation-delay: 2.6729s;"></div><div class="star" style="left: 39.6238%; top: 78.8359%; animation-delay: 0.512495s;"></div><div class="star" style="left: 75.2064%; top: 41.1178%; animation-delay: 1.69161s;"></div><div class="star" style="left: 67.6995%; top: 68.0104%; animation-delay: 2.34395s;"></div><div class="star" style="left: 11.6606%; top: 23.2742%; animation-delay: 0.782485s;"></div><div class="star" style="left: 48.462%; top: 85.7542%; animation-delay: 1.23441s;"></div><div class="star" style="left: 88.7667%; top: 98.7976%; animation-delay: 2.07778s;"></div><div class="star" style="left: 9.89472%; top: 66.4559%; animation-delay: 1.92208s;"></div><div class="star" style="left: 51.4434%; top: 80.9327%; animation-delay: 1.20628s;"></div><div class="star" style="left: 62.4356%; top: 13.1226%; animation-delay: 0.239975s;"></div><div class="star" style="left: 0.285413%; top: 34.4051%; animation-delay: 0.330237s;"></div><div class="star" style="left: 59.524%; top: 29.0022%; animation-delay: 1.15635s;"></div><div class="star" style="left: 71.8452%; top: 29.4358%; animation-delay: 2.71561s;"></div><div class="star" style="left: 37.1879%; top: 50.9988%; animation-delay: 1.45518s;"></div><div class="star" style="left: 48.9598%; top: 43.9526%; animation-delay: 2.16462s;"></div><div class="star" style="left: 84.4361%; top: 60.7692%; animation-delay: 2.32738s;"></div><div class="star" style="left: 48.0922%; top: 29.147%; animation-delay: 2.22832s;"></div><div class="star" style="left: 41.2691%; top: 69.3444%; animation-delay: 0.380099s;"></div><div class="star" style="left: 56.5858%; top: 75.556%; animation-delay: 0.665542s;"></div><div class="star" style="left: 22.0019%; top: 96.676%; animation-delay: 0.484009s;"></div><div class="star" style="left: 25.1648%; top: 89.6798%; animation-delay: 0.675769s;"></div><div class="star" style="left: 45.2234%; top: 34.5063%; animation-delay: 1.23597s;"></div><div class="star" style="left: 28.9789%; top: 2.00675%; animation-delay: 1.58166s;"></div><div class="star" style="left: 22.6635%; top: 91.9698%; animation-delay: 0.876912s;"></div><div class="star" style="left: 87.3518%; top: 53.0931%; animation-delay: 1.35149s;"></div><div class="star" style="left: 30.0229%; top: 67.8283%; animation-delay: 0.0375881s;"></div><div class="star" style="left: 51.9971%; top: 92.4741%; animation-delay: 1.20355s;"></div><div class="star" style="left: 56.4522%; top: 78.4748%; animation-delay: 2.55291s;"></div><div class="star" style="left: 3.5875%; top: 75.6657%; animation-delay: 0.937842s;"></div><div class="star" style="left: 83.8339%; top: 95.4149%; animation-delay: 2.10778s;"></div><div class="star" style="left: 32.0693%; top: 86.5426%; animation-delay: 0.0778211s;"></div><div class="star" style="left: 67.4654%; top: 96.7483%; animation-delay: 2.63818s;"></div><div class="star" style="left: 10.3186%; top: 34.5436%; animation-delay: 2.24835s;"></div><div class="star" style="left: 6.3427%; top: 30.785%; animation-delay: 0.761927s;"></div><div class="star" style="left: 27.9687%; top: 51.344%; animation-delay: 1.93295s;"></div></div>
     
