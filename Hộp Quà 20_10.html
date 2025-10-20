@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)https://haichuc2010.netlify.app/ -->
+<html lang="vi"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hộp Quà 20/10</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            overflow: hidden;
+            position: relative;
+            padding-bottom: 50px;
+        }
+
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .container {
+            text-align: center;
+            z-index: 10;
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px rgba(255, 192, 203, 0.5);
+        }
+
+        .gift-box {
+            width: 120px;
+            height: 120px;
+            margin: 30px auto;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .gift-box:hover {
+            transform: scale(1.1);
+        }
+
+        .box-body {
+            width: 120px;
+            height: 90px;
+            background: linear-gradient(145deg, #ff6b9d, #c44569);
+            border-radius: 8px;
+            position: absolute;
+            bottom: 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .box-lid {
+            width: 130px;
+            height: 40px;
+            background: linear-gradient(145deg, #ffa07a, #ff6347);
+            border-radius: 8px 8px 4px 4px;
+            position: absolute;
+            top: 0;
+            left: -5px;
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transform-origin: bottom;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .box-lid::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 40px;
+            background: #ff1744;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .box-lid::after {
+            content: '';
+            position: absolute;
+            width: 130px;
+            height: 20px;
+            background: #ff1744;
+            top: 10px;
+            left: 0;
+        }
+
+        .gift-box.opened .box-lid {
+            transform: translateY(-100px) rotateX(-90deg);
+            opacity: 0;
+        }
+
+        .ribbon {
+            width: 20px;
+            height: 90px;
+            background: #ff1744;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+
+        .ribbon-h {
+            width: 120px;
+            height: 20px;
+            background: #ff1744;
+            position: absolute;
+            bottom: 35px;
+            left: 0;
+        }
+
+        .letters-container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            top: 0;
+            left: 0;
+        }
+
+        .letter {
+            position: absolute;
+            width: 60px;
+            height: 80px;
+            background: linear-gradient(145deg, #fff, #f0f0f0);
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
+            pointer-events: all;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .letter:hover {
+            transform: scale(1.2);
+            box-shadow: 0 10px 30px rgba(255,192,203,0.5);
+        }
+
+        .letter::before {
+            content: '💌';
+            position: absolute;
+            font-size: 2em;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes fallLetter {
+            0% {
+                top: -100px;
+                opacity: 0;
+                transform: translateX(var(--start-x)) rotate(0deg);
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                top: 110vh;
+                opacity: 0;
+                transform: translateX(var(--start-x)) rotate(360deg);
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(145deg, #fff, #ffe6f0);
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(255,192,203,0.4);
+            animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+
+        @keyframes popIn {
+            to {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .modal-content h2 {
+            color: #c44569;
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .modal-content p {
+            color: #333;
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .close-btn {
+            display: block;
+            margin: 0 auto;
+            background: linear-gradient(145deg, #ff6b9d, #c44569);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(196,69,105,0.3);
+        }
+
+        .close-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(196,69,105,0.5);
+        }
+
+        .instruction {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1em;
+            margin-top: 30px;
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+    </style>
+<style>.--savior-overlay-transform-reset {
+  transform: none !important;
+}
+.--savior-overlay-z-index-top {
+  z-index: 2147483643 !important;
+}
+.--savior-overlay-position-relative {
+  position: relative;
+}
+.--savior-overlay-position-static {
+  position: static !important;
+}
+.--savior-overlay-overflow-hidden {
+  overflow: hidden !important;
+}
+.--savior-overlay-overflow-x-visible {
+  overflow-x: visible !important;
+}
+.--savior-overlay-overflow-y-visible {
+  overflow-y: visible !important;
+}
+.--savior-overlay-z-index-reset {
+  z-index: auto !important;
+}
+.--savior-overlay-display-none {
+  display: none !important;
+}
+.--savior-overlay-clearfix {
+  clear: both;
+}
+.--savior-overlay-reset-filter {
+  filter: none !important;
+  backdrop-filter: none !important;
+}
+.--savior-tooltip-host {
+  z-index: 9999;
+  position: absolute;
+  top: 0;
+}
+/*Override css styles for Twitch.tv*/
+main.--savior-overlay-z-index-reset {
+  z-index: auto !important;
+}
+.modal__backdrop.--savior-overlay-z-index-reset {
+  position: static !important;
+}
+main.--savior-overlay-z-index-top {
+  z-index: auto !important;
+}
+main.--savior-overlay-z-index-top .channel-root__player-container + div,
+main.--savior-overlay-z-index-top .video-player-hosting-ui__container + div {
+  opacity: 0.1;
+}
+/*Dirty hack for facebook big video page e.g: https://www.facebook.com/abc/videos/...*/
+.--savior-backdrop {
+  position: fixed !important;
+  z-index: 2147483642 !important;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw !important;
+  background-color: rgba(0,0,0,0.9);
+}
+.--savior-overlay-twitter-video-player {
+  position: fixed;
+  width: 80%;
+  height: 80%;
+  top: 10%;
+  left: 10%;
+}
+.--savior-overlay-z-index-reset [class*="DivSideNavContainer"],
+.--savior-overlay-z-index-reset [class*="DivHeaderContainer"],
+.--savior-overlay-z-index-reset [class*="DivBottomContainer"],
+.--savior-overlay-z-index-reset [class*="DivCategoryListWrapper"],
+.--savior-overlay-z-index-reset [data-testid="sidebarColumn"],
+.--savior-overlay-z-index-reset header[role="banner"],
+.--savior-overlay-z-index-reset [data-testid="cellInnerDiv"]:not(.--savior-overlay-z-index-reset),
+.--savior-overlay-z-index-reset [aria-label="Home timeline"]>div:first-child,
+.--savior-overlay-z-index-reset [aria-label="Home timeline"]>div:nth-child(3) {
+  z-index: -1 !important;
+}
+.--savior-overlay-z-index-reset [data-testid="cellInnerDiv"] .--savior-backdrop+div {
+  z-index: 2147483643 !important;
+}
+.--savior-overlay-z-index-reset [data-testid="primaryColumn"]>[aria-label="Home timeline"] {
+  z-index: 0 !important;
+}
+.--savior-overlay-z-index-reset#mtLayer,
+.--savior-overlay-z-index-reset.media-layer {
+  z-index: 3000 !important;
+}
+.--savior-overlay-position-relative [class*="SecBar_secBar_"],
+.--savior-overlay-position-relative .woo-box-flex [class*="Frame_top_"] {
+  z-index: 0 !important;
+}
+.--savior-overlay-position-relative .vue-recycle-scroller__item-view:not(.--savior-overlay-z-index-reset),
+.--savior-overlay-position-relative .woo-panel-main[class*="BackTop_main_"],
+.--savior-overlay-position-relative [class*="Main_side_"] {
+  z-index: -1 !important;
+}
+/* Fix conflict css with zingmp3 */
+.zm-video-modal.--savior-overlay-z-index-reset {
+  position: absolute;
+}
+/* Dirty hack for xvideos99 */
+#page #main.--savior-overlay-z-index-reset {
+  z-index: auto !important;
+}
+/* Overlay for ok.ru */
+#vp_w.--savior-overlay-z-index-reset.media-layer.media-layer__video {
+  overflow-y: hidden;
+  z-index: 2147483643 !important;
+}
+/* Fix missing controller for tv.naver.com */
+.--savior-overlay-z-index-top.rmc_controller,
+.--savior-overlay-z-index-top.rmc_setting_intro,
+.--savior-overlay-z-index-top.rmc_highlight,
+.--savior-overlay-z-index-top.rmc_control_settings {
+  z-index: 2147483644 !important;
+}
+/* Dirty hack for douyi.com */
+.swiper-wrapper.--savior-overlay-z-index-reset .swiper-slide:not(.swiper-slide-active),
+.swiper-wrapper.--savior-overlay-transform-reset .swiper-slide:not(.swiper-slide-active) {
+  display: none;
+}
+.videoWrap + div > div {
+  pointer-events: unset;
+}
+/* Dirty hack for fpt.ai */
+.mfp-wrap.--savior-overlay-z-index-top {
+  position: relative;
+}
+.mfp-wrap.--savior-overlay-z-index-top .mfp-close {
+  display: none;
+}
+.mfp-wrap.--savior-overlay-z-index-top .mfp-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+section.--savior-overlay-z-index-reset>main[role="main"].--savior-overlay-z-index-reset + nav {
+  z-index: -1 !important;
+}
+section.--savior-overlay-z-index-reset>main[role="main"].--savior-overlay-z-index-reset section.--savior-overlay-z-index-reset div.--savior-overlay-z-index-reset ~ div {
+  position: relative;
+}
+.watching-movie #video-player.--savior-overlay-z-index-top {
+  z-index: 2147483644 !important;
+}
+div[class^="tiktok"].--savior-overlay-z-index-reset {
+  z-index: 2147483644 !important;
+}
+.--savior-lightoff-fix section:not(:has([class*="--savior-overlay-"])),
+.--savior-lightoff-fix section.section_video ~ section {
+  z-index: -1;
+  position: relative;
+}
+.--savior-lightoff-fix header,
+.--savior-lightoff-fix footer,
+.--savior-lightoff-fix .top-header,
+.--savior-lightoff-fix .swiper-container,
+.--savior-lightoff-fix #to_top,
+.--savior-lightoff-fix #button-adblock {
+  z-index: -1 !important;
+}
+@-moz-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@-o-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+</style></head>
+<body>
+    <div class="stars" id="stars"><div class="star" style="left: 14.3269%; top: 7.60758%; animation-delay: 2.20364s;"></div><div class="star" style="left: 88.3033%; top: 51.4213%; animation-delay: 1.04425s;"></div><div class="star" style="left: 95.3935%; top: 67.2633%; animation-delay: 1.16938s;"></div><div class="star" style="left: 30.368%; top: 6.87973%; animation-delay: 1.18674s;"></div><div class="star" style="left: 11.9429%; top: 8.29293%; animation-delay: 2.48879s;"></div><div class="star" style="left: 10.144%; top: 16.3076%; animation-delay: 0.756616s;"></div><div class="star" style="left: 90.7667%; top: 1.10049%; animation-delay: 0.386169s;"></div><div class="star" style="left: 19.8758%; top: 30.4083%; animation-delay: 2.45634s;"></div><div class="star" style="left: 98.9866%; top: 86.3216%; animation-delay: 1.49516s;"></div><div class="star" style="left: 85.5976%; top: 9.1883%; animation-delay: 2.82161s;"></div><div class="star" style="left: 75.1318%; top: 37.8659%; animation-delay: 2.39791s;"></div><div class="star" style="left: 43.4669%; top: 38.4373%; animation-delay: 1.23855s;"></div><div class="star" style="left: 75.4413%; top: 85.1461%; animation-delay: 2.94049s;"></div><div class="star" style="left: 16.7852%; top: 32.6939%; animation-delay: 2.23606s;"></div><div class="star" style="left: 55.97%; top: 8.58121%; animation-delay: 2.00661s;"></div><div class="star" style="left: 29.688%; top: 77.9607%; animation-delay: 2.30414s;"></div><div class="star" style="left: 84.5256%; top: 25.9689%; animation-delay: 1.35622s;"></div><div class="star" style="left: 23.4451%; top: 74.7974%; animation-delay: 0.233758s;"></div><div class="star" style="left: 83.0681%; top: 91.1082%; animation-delay: 1.68709s;"></div><div class="star" style="left: 12.2999%; top: 59.815%; animation-delay: 0.61885s;"></div><div class="star" style="left: 62.1394%; top: 65.6691%; animation-delay: 1.80198s;"></div><div class="star" style="left: 67.7535%; top: 9.00464%; animation-delay: 1.9931s;"></div><div class="star" style="left: 48.8242%; top: 93.3157%; animation-delay: 1.9256s;"></div><div class="star" style="left: 97.8699%; top: 16.7965%; animation-delay: 2.84162s;"></div><div class="star" style="left: 45.8385%; top: 44.2034%; animation-delay: 2.41301s;"></div><div class="star" style="left: 61.8922%; top: 7.46973%; animation-delay: 2.76413s;"></div><div class="star" style="left: 53.3623%; top: 67.8467%; animation-delay: 2.61099s;"></div><div class="star" style="left: 31.7803%; top: 57.3231%; animation-delay: 1.31311s;"></div><div class="star" style="left: 75.7636%; top: 60.647%; animation-delay: 0.0325968s;"></div><div class="star" style="left: 91.7134%; top: 46.8434%; animation-delay: 1.49885s;"></div><div class="star" style="left: 3.57022%; top: 48.6755%; animation-delay: 2.43458s;"></div><div class="star" style="left: 85.6842%; top: 56.8895%; animation-delay: 0.265126s;"></div><div class="star" style="left: 52.2732%; top: 92.9304%; animation-delay: 1.34277s;"></div><div class="star" style="left: 58.1831%; top: 90.5542%; animation-delay: 2.80314s;"></div><div class="star" style="left: 53.9504%; top: 21.8219%; animation-delay: 2.17694s;"></div><div class="star" style="left: 15.2017%; top: 23.7289%; animation-delay: 0.417022s;"></div><div class="star" style="left: 82.9469%; top: 74.178%; animation-delay: 0.300349s;"></div><div class="star" style="left: 97.2977%; top: 84.2969%; animation-delay: 1.81915s;"></div><div class="star" style="left: 25.1237%; top: 47.8635%; animation-delay: 2.54825s;"></div><div class="star" style="left: 19.9231%; top: 87.6811%; animation-delay: 0.00637287s;"></div><div class="star" style="left: 70.2704%; top: 62.3944%; animation-delay: 2.66596s;"></div><div class="star" style="left: 97.7725%; top: 35.0263%; animation-delay: 1.30222s;"></div><div class="star" style="left: 9.40621%; top: 4.96181%; animation-delay: 0.357348s;"></div><div class="star" style="left: 45.8416%; top: 61.9242%; animation-delay: 1.10381s;"></div><div class="star" style="left: 85.984%; top: 81.421%; animation-delay: 2.63146s;"></div><div class="star" style="left: 38.5532%; top: 94.5128%; animation-delay: 1.18658s;"></div><div class="star" style="left: 65.9951%; top: 45.2265%; animation-delay: 1.10411s;"></div><div class="star" style="left: 82.8451%; top: 85.0194%; animation-delay: 2.14501s;"></div><div class="star" style="left: 68.1544%; top: 73.4005%; animation-delay: 2.24932s;"></div><div class="star" style="left: 17.2633%; top: 8.31775%; animation-delay: 0.974517s;"></div><div class="star" style="left: 54.0119%; top: 58.6789%; animation-delay: 0.479912s;"></div><div class="star" style="left: 9.71152%; top: 35.4888%; animation-delay: 1.22354s;"></div><div class="star" style="left: 85.4392%; top: 32.6966%; animation-delay: 1.92531s;"></div><div class="star" style="left: 33.7328%; top: 23.4752%; animation-delay: 2.10884s;"></div><div class="star" style="left: 72.1416%; top: 10.1465%; animation-delay: 1.91652s;"></div><div class="star" style="left: 88.7128%; top: 82.3695%; animation-delay: 1.44376s;"></div><div class="star" style="left: 91.268%; top: 53.2796%; animation-delay: 2.06865s;"></div><div class="star" style="left: 73.897%; top: 63.5428%; animation-delay: 0.206183s;"></div><div class="star" style="left: 18.9695%; top: 93.8547%; animation-delay: 1.08275s;"></div><div class="star" style="left: 57.7009%; top: 28.9658%; animation-delay: 0.735989s;"></div><div class="star" style="left: 96.4757%; top: 72.9859%; animation-delay: 1.43937s;"></div><div class="star" style="left: 98.5193%; top: 96.5071%; animation-delay: 2.74436s;"></div><div class="star" style="left: 82.7525%; top: 2.37749%; animation-delay: 1.38306s;"></div><div class="star" style="left: 16.628%; top: 64.2043%; animation-delay: 2.13391s;"></div><div class="star" style="left: 86.004%; top: 72.9044%; animation-delay: 2.83318s;"></div><div class="star" style="left: 29.7287%; top: 12.5317%; animation-delay: 0.00709477s;"></div><div class="star" style="left: 4.93324%; top: 49.1037%; animation-delay: 2.15474s;"></div><div class="star" style="left: 78.5553%; top: 18.5773%; animation-delay: 2.97509s;"></div><div class="star" style="left: 36.7903%; top: 73.6888%; animation-delay: 0.316465s;"></div><div class="star" style="left: 38.1462%; top: 17.8501%; animation-delay: 0.391489s;"></div><div class="star" style="left: 28.7668%; top: 39.3455%; animation-delay: 0.825877s;"></div><div class="star" style="left: 49.8469%; top: 91.3254%; animation-delay: 1.03684s;"></div><div class="star" style="left: 76.3506%; top: 2.6984%; animation-delay: 0.764402s;"></div><div class="star" style="left: 94.138%; top: 53.1391%; animation-delay: 1.95036s;"></div><div class="star" style="left: 9.01974%; top: 19.9045%; animation-delay: 2.72346s;"></div><div class="star" style="left: 14.3872%; top: 73.3824%; animation-delay: 0.11291s;"></div><div class="star" style="left: 20.7889%; top: 71.6092%; animation-delay: 0.963129s;"></div><div class="star" style="left: 43.2546%; top: 71.3384%; animation-delay: 0.315622s;"></div><div class="star" style="left: 4.76695%; top: 57.1084%; animation-delay: 2.72578s;"></div><div class="star" style="left: 54.0493%; top: 27.8883%; animation-delay: 0.582049s;"></div><div class="star" style="left: 95.9157%; top: 64.9587%; animation-delay: 1.92573s;"></div><div class="star" style="left: 15.7334%; top: 67.5069%; animation-delay: 0.87562s;"></div><div class="star" style="left: 58.2731%; top: 78.562%; animation-delay: 1.09589s;"></div><div class="star" style="left: 61.4536%; top: 50.9904%; animation-delay: 0.0850089s;"></div><div class="star" style="left: 72.0664%; top: 43.1319%; animation-delay: 1.94365s;"></div><div class="star" style="left: 99.2954%; top: 67.5622%; animation-delay: 2.99473s;"></div><div class="star" style="left: 93.8234%; top: 53.4606%; animation-delay: 1.78462s;"></div><div class="star" style="left: 43.4645%; top: 10.9709%; animation-delay: 2.57118s;"></div><div class="star" style="left: 41.2804%; top: 18.81%; animation-delay: 1.34449s;"></div><div class="star" style="left: 27.6249%; top: 55.375%; animation-delay: 1.23335s;"></div><div class="star" style="left: 99.2715%; top: 75.8165%; animation-delay: 0.648888s;"></div><div class="star" style="left: 60.9401%; top: 71.1043%; animation-delay: 2.84817s;"></div><div class="star" style="left: 71.0405%; top: 22.221%; animation-delay: 2.54643s;"></div><div class="star" style="left: 9.90339%; top: 21.0603%; animation-delay: 1.87971s;"></div><div class="star" style="left: 73.9857%; top: 37.2564%; animation-delay: 2.14254s;"></div><div class="star" style="left: 21.5091%; top: 39.8239%; animation-delay: 0.558624s;"></div><div class="star" style="left: 24.7782%; top: 21.8154%; animation-delay: 2.66889s;"></div><div class="star" style="left: 71.3011%; top: 93.2757%; animation-delay: 2.68701s;"></div><div class="star" style="left: 78.7359%; top: 56.9616%; animation-delay: 2.40491s;"></div><div class="star" style="left: 17.8655%; top: 27.898%; animation-delay: 1.98046s;"></div></div>
+    
+    <div class="container">
+        <h1>🌹 Chúc Mừng 20/10 🌹</h1>
+        
+        <div class="gift-box" id="giftBox">
+            <div class="box-lid"></div>
+            <div class="ribbon"></div>
+            <div class="ribbon-h"></div>
+            <div class="box-body"></div>
+        </div>
+        
+        <p class="instruction">✨ Click vào hộp quà để mở ✨</p>
+        <p class="instruction" id="letterInstruction" style="display: none;">💌 Bấm vào lá thư để đọc lời chúc 💌</p>
+    </div>
+
+    <div class="letters-container" id="lettersContainer"></div>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h2>💖 Lời Chúc 20/10</h2>
+            <p id="wishText"></p>
+            <button class="close-btn" onclick="closeModal()">Đóng</button>
+        </div>
+    </div>
+
+    <script>
+        // Tạo sao
+        const starsContainer = document.getElementById('stars');
+        for(let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            starsContainer.appendChild(star);
+        }
+
+        const wishes = [
+            "Chúc em luôn xinh đẹp, tươi trẻ và tràn đầy năng lượng! 20/10 vui vẻ! 🌸",
+            "Chúc em ngày càng thành công trong công việc và hạnh phúc trong cuộc sống! 💖",
+            "Chúc em luôn khỏe mạnh, vui vẻ và gặp nhiều may mắn! 🍀",
+            "Chúc em mãi giữ được nụ cười rạng rỡ như hôm nay! 😊",
+            "Chúc em được yêu thương, trân trọng và tôn vinh mỗi ngày! 👑",
+            "Chúc em luôn tự tin, xinh đẹp và toả sáng! ⭐",
+            "Chúc em 20/10 thật nhiều niềm vui và hạnh phúc! 🎉",
+            "Chúc em luôn giữ được sự dịu dàng và mạnh mẽ trong cuộc sống! 🌹",
+            "Chúc em ngày càng thành công và đạt được những điều em mong muốn! 💪",
+            "Chúc em 20/10 vui vẻ! Luôn hạnh phúc và an yên bên người thương! 💕",
+            "Em là người phụ nữ tuyệt vời! Chúc em ngày 20/10 thật ý nghĩa! 🌺",
+            "Chúc em luôn giữ được trái tim ấm áp và tâm hồn trong sáng! ✨",
+            "Chúc em mọi điều tốt đẹp nhất trong cuộc sống! Yêu em nhiều! 💗",
+            "Chúc em 20/10 hạnh phúc, xinh đẹp và tràn đầy yêu thương! 🌷",
+            "Chúc em luôn là cô gái đáng yêu và rạng rỡ như thế này! 🎀",
+            "Ngày 20/10, chúc em luôn là ngôi sao sáng nhất! 🌟",
+            "Chúc em luôn vui vẻ, yêu đời và lan tỏa năng lượng tích cực! 🌞",
+            "Em xứng đáng với tất cả những điều tuyệt vời nhất! Chúc mừng 20/10! 💝",
+            "Chúc em ngày phụ nữ Việt Nam thật đặc biệt và ý nghĩa! 🇻🇳",
+            "Chúc em luôn được che chở, yêu thương và hạnh phúc! 🏡",
+            "Em là người phụ nữ mạnh mẽ và tuyệt vời! Chúc mừng 20/10! 💪✨",
+            "Chúc em luôn giữ được sự trẻ trung và đam mê với cuộc sống! 🎈",
+            "Chúc em ngày 20/10 ngập tràn hoa và yêu thương! 💐",
+            "Em là niềm tự hào! Chúc em ngày càng toả sáng! 🌈",
+            "Chúc em luôn có niềm tin, hy vọng và tình yêu trong tim! 💓",
+            "Ngày 20/10, chúc em được đón nhận thật nhiều yêu thương! 🎁",
+            "Chúc em luôn hạnh phúc với những gì em đang có! 🍀💕",
+            "Em là bông hoa đẹp nhất! Chúc mừng ngày phụ nữ Việt Nam! 🌸🌺",
+            "Chúc em luôn giữ được sự duyên dáng và quyến rũ! 💃",
+            "Chúc em 20/10 thật nhiều tiếng cười và khoảnh khắc đáng nhớ! 😄✨",
+            "Em là điều kỳ diệu! Chúc em ngày 20/10 thật tuyệt vời! 🎊",
+            "Chúc em luôn được tôn trọng và đánh giá đúng giá trị! 👸",
+            "Ngày phụ nữ Việt Nam, chúc em luôn hạnh phúc và thành công! 🏆",
+            "Chúc em luôn là phiên bản tốt nhất của chính mình! 🌟💖",
+            "Em là món quà quý giá! Chúc em 20/10 tràn đầy niềm vui! 🎀🎉",
+            "Chúc em luôn tìm thấy hạnh phúc trong những điều giản đơn! 🌼",
+            "Ngày 20/10, chúc em được yêu và được sống trọn vẹn! 💞",
+            "Chúc em luôn kiên cường vượt qua mọi thử thách! 💪🌹",
+            "Em là người phụ nữ đáng kinh ngạc! Chúc mừng 20/10! 🎆",
+            "Chúc em ngày càng hoàn thiện và phát triển bản thân! 📚✨"
+        ];
+
+        let giftOpened = false;
+        let letterInterval;
+        const giftBox = document.getElementById('giftBox');
+        const lettersContainer = document.getElementById('lettersContainer');
+        const letterInstruction = document.getElementById('letterInstruction');
+
+        giftBox.addEventListener('click', function() {
+            if(!giftOpened) {
+                giftOpened = true;
+                this.classList.add('opened');
+                
+                // Hiện hướng dẫn bấm thư
+                setTimeout(() => {
+                    letterInstruction.style.display = 'block';
+                }, 800);
+                
+                // Bắt đầu thả thư liên tục
+                setTimeout(() => {
+                    startLetterRain();
+                }, 600);
+            }
+        });
+
+        function startLetterRain() {
+            // Tạo thư mới mỗi 1 giây (nhanh hơn)
+            letterInterval = setInterval(() => {
+                createLetter();
+            }, 1000);
+            
+            // Tạo 3 thư đầu tiên ngay lập tức
+            createLetter();
+            setTimeout(() => createLetter(), 300);
+            setTimeout(() => createLetter(), 600);
+        }
+
+        function createLetter() {
+            const letter = document.createElement('div');
+            letter.className = 'letter';
+            
+            // Random vị trí ngang
+            const startX = Math.random() * (window.innerWidth - 60);
+            letter.style.left = startX + 'px';
+            letter.style.setProperty('--start-x', '0px');
+            
+            // Thời gian rơi random
+            const duration = 8 + Math.random() * 4;
+            letter.style.animation = `fallLetter ${duration}s linear`;
+            
+            lettersContainer.appendChild(letter);
+            
+            // Click để xem lời chúc
+            letter.addEventListener('click', function(e) {
+                e.stopPropagation();
+                openLetter();
+                this.remove();
+            });
+            
+            // Tự động xóa sau khi rơi hết
+            setTimeout(() => {
+                if(letter.parentNode) {
+                    letter.remove();
+                }
+            }, duration * 1000);
+        }
+
+        function openLetter() {
+            const modal = document.getElementById('modal');
+            const wishText = document.getElementById('wishText');
+            const randomWish = wishes[Math.floor(Math.random() * wishes.length)];
+            
+            wishText.textContent = randomWish;
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // Đóng modal khi click bên ngoài
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+
+  <!-- LazyBuket credit -->
+  <footer style="position:fixed;left:50%;transform:translateX(-50%);bottom:8px;color:rgba(255,255,255,0.95);font-size:11px;font-family:inherit;z-index:2147483646;pointer-events:none;letter-spacing:0.4px;">
+    Code by LazyBuket
+  </footer>
+
+</body>
+</html>
+
